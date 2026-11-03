@@ -3,13 +3,12 @@ typedef struct Incidente
     int num_identificacao;
     int cod;
     int nivel_gravidade;
-
 }incidente;
 
 
 typedef struct NoArvore
 {
-    incidente *info;
+    incidente info;
     struct NoArvore *esq;
     struct NoArvore *dir;
 }NoArv;
@@ -27,7 +26,36 @@ Arv *CriaArvore()
     return aux;
 }
 
-NoArv* aux_insere(NoArv *no, incidente *novo_incidente) {
+int BuscaID_incidente(NoArv *no, int num)
+{
+    NoArv *Pai;
+    if (no == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        Pai = no;
+        while (Pai != NULL)
+        {
+            if (Pai -> info.num_identificacao < num)
+            {
+                Pai = Pai -> dir;
+            }
+            else if (Pai -> info.num_identificacao > num)
+            {
+                Pai = Pai -> esq;
+            }
+            else if (Pai -> info.num_identificacao == num)
+            {
+                return 1;
+            }
+        }
+        return 0;
+    }
+}
+
+NoArv* aux_insere(NoArv *no, incidente novo_incidente) {
     int flag;
     NoArv *Pai;
     NoArv *novo = (NoArv*) malloc(sizeof(NoArv));
@@ -41,14 +69,14 @@ NoArv* aux_insere(NoArv *no, incidente *novo_incidente) {
         Pai = no;
         flag = 0;
         while (flag == 0) {
-            if (Pai->info->num_identificacao < novo_incidente->num_identificacao) {
+            if (Pai->info.num_identificacao < novo_incidente.num_identificacao) {
                 if (Pai->dir == NULL) {
                     Pai->dir = novo;
                     flag = 1;
                 } else {
                     Pai = Pai->dir;
                 }
-            } else if (Pai->info->num_identificacao > novo_incidente->num_identificacao) {
+            } else if (Pai->info.num_identificacao > novo_incidente.num_identificacao) {
                 if (Pai->esq == NULL) {
                     Pai->esq = novo;
                     flag = 1;
@@ -64,9 +92,33 @@ NoArv* aux_insere(NoArv *no, incidente *novo_incidente) {
     }
 }
 
-void InsereArv(Arv *antiga, incidente *novo_incidente)
-{
+void InsereArv(Arv *antiga)
+{   
+    int flag;
+    incidente novo;
+    do{
+        flag = 0;
+        printf("Digite o número único de identificação(número inteiro de 2 digítos): ");
+        scanf("%d",&novo.num_identificacao);
+        
+        if(BuscaElemento(antiga->raiz,novo.num_identificacao)){
+            printf("Esse número ja foi cadastrado!!");
+            flag = 1; 
+        }
 
-    
-    antiga -> raiz = aux_insere(antiga -> raiz, novo_incidente);
+    }while (novo.num_identificacao < 10 || novo.num_identificacao > 99 || flag == 1);
+
+    do{
+        printf("Digite o código do equipamento relacionado(número inteiro de 4 dígitos): ");
+        scanf("%d",&novo.cod);
+    }while(novo.cod <1000 || novo.cod > 9999);
+
+    do{
+        printf("Digite o nível de gravidade: ");
+        scanf("%d",&novo.nivel_gravidade);
+    }while(novo.nivel_gravidade < 1 || novo.nivel_gravidade > 3);    
+
+    antiga -> raiz = aux_insere(antiga -> raiz, novo);
 }
+
+
