@@ -122,3 +122,23 @@ void InsereArv(Arv *antiga)
 }
 
 
+void PrintaElem(NoArv *A)
+{   
+    if(A == NULL)
+    {
+        printf("Ponteiro da raiz está Nulo!");
+    }
+    else
+    {
+       
+        PrintaElem(A -> esq);
+
+        printf("Número de identificação: %d \n\t", A -> info.num_identificacao);
+        printf("Código: %d \n\t",A -> info.cod);
+        printf("Nível de Gravidade: %d, \n\t", A -> info.nivel_gravidade );
+
+        PrintaElem(A -> dir);
+        
+    }
+    
+}
