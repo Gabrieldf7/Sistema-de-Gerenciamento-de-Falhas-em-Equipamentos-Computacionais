@@ -101,7 +101,7 @@ void InsereArv(Arv *antiga)
         printf("Digite o número único de identificação(número inteiro de 2 digítos): ");
         scanf("%d",&novo.num_identificacao);
         
-        if(BuscaElemento(antiga->raiz,novo.num_identificacao)){
+        if(BuscaID_incidente(antiga->raiz,novo.num_identificacao)){
             printf("Esse número ja foi cadastrado!!");
             flag = 1; 
         }
@@ -124,13 +124,8 @@ void InsereArv(Arv *antiga)
 
 void PrintaElem(NoArv *A)
 {   
-    if(A == NULL)
+    if(A != NULL)
     {
-        printf("Ponteiro da raiz está Nulo!");
-    }
-    else
-    {
-       
         PrintaElem(A -> esq);
 
         printf("Número de identificação: %d \n\t", A -> info.num_identificacao);
@@ -138,7 +133,74 @@ void PrintaElem(NoArv *A)
         printf("Nível de Gravidade: %d, \n\t", A -> info.nivel_gravidade );
 
         PrintaElem(A -> dir);
-        
     }
-    
 }
+
+
+
+
+
+NoArv* remove_no(NoArv *raiz, int num_id)
+{
+    NoArv *aux, *maior_esq;
+
+    if(raiz == NULL)
+    {
+        return raiz;
+    }
+
+    else
+    {
+        if(raiz -> info.num_identificacao < num_id)
+        {
+            raiz -> dir = remove_no(raiz -> dir, num_id);
+            return raiz;
+        }
+
+        if(raiz -> info.num_identificacao > num_id)
+        {
+            raiz -> esq = remove_no(raiz -> esq, num_id);
+            return raiz;
+        }
+
+
+        if(raiz -> dir == NULL)
+        {
+            aux = raiz -> esq;
+            free(raiz);
+            return aux;
+        }
+
+        if(raiz -> esq == NULL)
+        {
+            aux = raiz -> dir;
+            free(raiz);
+            return aux;
+        }
+
+        maior_esq = raiz -> esq; 
+        while (maior_esq -> dir != NULL)
+        {
+            maior_esq = maior_esq -> dir;
+        }
+        raiz -> info = maior_esq -> info;
+        raiz -> esq = remove_no(raiz -> esq, maior_esq -> info.num_identificacao);
+        return raiz;         
+    }
+}
+
+    void remover(Arv *A)
+    {
+        int id_remover;
+        printf("Digite o número de identificação do incidente que deseja remover: ");
+                scanf("%d", &id_remover);
+                if (BuscaID_incidente(A->raiz, id_remover))
+                {
+                    A->raiz = remove_no(A->raiz, id_remover);
+                    printf("\nIncidente removido com sucesso!\n");
+                }
+                else
+                {
+                    printf("\nIncidente com ID %d não encontrado!\n", id_remover);
+                }
+    }
