@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <math.h>
 #include <windows.h>
-#include "arvores-hash.h"
+#include "arvores.h"
 
 
 int main()

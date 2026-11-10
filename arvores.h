@@ -15,7 +15,7 @@ typedef struct NoArvore
 
 typedef struct Arvore
 {
-     NoArv *raiz;
+    NoArv *raiz;
 }Arv;
 
 Arv *CriaArvore()
@@ -24,6 +24,15 @@ Arv *CriaArvore()
     aux = (Arv*) malloc (sizeof(Arv));
     aux -> raiz = NULL;
     return aux;
+}
+
+int VerificaArvore(NoArv *raiz)
+{
+    if (raiz == NULL)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 int BuscaID_incidente(NoArv *no, int num)
@@ -136,8 +145,23 @@ void PrintaElem(NoArv *A)
     }
 }
 
-
-
+//TEM Q TERMINAR DPS COM O EQUIPAMENTO 
+/*void PesquisarID(NoArv *A){
+    int ID, flag;
+    do{
+        printf("Digite o número único de identificação(número inteiro de 2 digítos): ");
+        scanf("%d",&ID);
+        
+        if(BuscaID_incidente(A,ID)){
+            printf("Número de identificação: %d \n\t", A -> info.num_identificacao);
+            printf("Código: %d \n\t",A -> info.cod);
+            printf("Nível de Gravidade: %d, \n\t", A -> info.nivel_gravidade );
+        }
+        else{
+            printf("Número único de identificação inválido");
+        }
+    }while (ID < 10 || ID > 99);
+}*/
 
 
 NoArv* remove_no(NoArv *raiz, int num_id)
@@ -204,3 +228,4 @@ NoArv* remove_no(NoArv *raiz, int num_id)
                     printf("\nIncidente com ID %d não encontrado!\n", id_remover);
                 }
     }
+
