@@ -41,25 +41,41 @@ int buscatabela_hash(Equipamento *tabela[], int k)
     return 0;
 }
 
-//PRECISA TERMINAR ESSA FUNCTION DE INSERIR, FALTA LER NOME, E INSERIR REALMENTE NA TABELA HASH
+//PRECISA TERMINAR ESSA FUNCTION DE INSERIR 
+void InserirHash(Equipamento *tabela[], Equipamento *ajuda)
+{
+
+}
+
+
 void insere_hash(Equipamento *tabela[])
 {
-   int cod;
+   Equipamento *ajuda;
    int flag;
-   char nome[11];
     do{
         flag = 0;
         printf("Digite o código único de identificação(número inteiro de 2 digítos): ");
-        scanf("%d",&cod);
+        scanf("%d",&ajuda->Cod_identificacao);
         
-        if(buscatabela_hash(tabela,cod)){
+        if(buscatabela_hash(tabela,ajuda->Cod_identificacao)){
             printf("Esse código já foi cadastrado!!");
             flag = 1; 
         }
 
-    }while (cod < 1000 || cod > 9999 || flag == 1);
+    }while (ajuda->Cod_identificacao < 1000 || ajuda->Cod_identificacao > 9999 || flag == 1);
 
-    
 
+    do {
+        printf("\nDigite o nome do equipamento de até 11 caractéres: ");
+        fgets(ajuda->Nome, sizeof(ajuda->Nome), stdin);
+                
+        if (strlen(ajuda->Nome) == 0) {
+          printf("Erro: O nome do equipamento não pode ser vazio!\n");
+        }
+        
+
+      } while (strlen(ajuda->Nome) == 0);
+
+    InserirHash(tabela,ajuda);
 
 }
