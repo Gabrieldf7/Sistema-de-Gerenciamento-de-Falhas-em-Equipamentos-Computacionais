@@ -4,6 +4,7 @@
 #include <math.h>
 #include <windows.h>
 #include "arvores.h"
+#include "hash.h"
 
 
 int main()
@@ -11,6 +12,7 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     setlocale(LC_ALL,"portuguese.UTF-8");
     Arv *A = CriaArvore();
+    Equipamento *tabela[TAM_hash];
 
     int escolha = 1;
 
