@@ -215,7 +215,7 @@ NoArv* remove_no(NoArv *raiz, int num_id)
 Arv* remover( Arv *RAIZ, int num_id)
 {
     NoArv *aux = RAIZ->raiz;
-if(aux->info.cod== num_id && aux->dir==NULL && aux->esq==NULL)
+    if(aux->info.cod== num_id && aux->dir==NULL && aux->esq==NULL)
     {
         free(aux);
         free(RAIZ);
@@ -233,7 +233,7 @@ if(aux->info.cod== num_id && aux->dir==NULL && aux->esq==NULL)
                 scanf("%d", &id_remover);
                 if (BuscaID_incidente(A->raiz, id_remover))
                 {
-                    A->raiz = remover(A->raiz, id_remover);
+                    A = remover(A, id_remover);
                     printf("\nIncidente removido com sucesso!\n");
                 }
                 else

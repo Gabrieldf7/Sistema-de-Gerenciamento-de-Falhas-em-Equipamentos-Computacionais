@@ -1,9 +1,11 @@
 #define TAM_hash 67
 
+typedef struct lista lista;
+
 typedef struct equipamento {
   int Cod_identificacao;
   char Nome[11];
-  struct Lista *incid;
+  struct lista *incid;
 } Equipamento;
 
 typedef struct no{
@@ -34,12 +36,10 @@ void inicializa_hash(lista *tabela[]) {
     
     for (int i = 0; i < TAM_hash; i++) {
         tabela[i] = Criarlista();
-        tabela[i]->inicio->info.incid = Criarlista();
   }
 
     for (int i = 0; i < TAM_hash; i++) {
         tabela[i]->inicio = NULL;
-        tabela[i]->inicio->info.incid = NULL;
   }
 
 }
@@ -115,5 +115,5 @@ void ler_hash(lista *tabela[]){
 
     int indice;
     indice = hash(ajuda.Cod_identificacao);
-    tabela[indice]->inicio = InserirHash(tabela[indice]->inicio,ajuda);
+    tabela[indice]->inicio = Inserirhash(tabela[indice]->inicio,ajuda);
 }
