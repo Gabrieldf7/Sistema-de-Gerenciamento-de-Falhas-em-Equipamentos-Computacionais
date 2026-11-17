@@ -163,7 +163,6 @@ void PrintaElem(NoArv *A)
     }while (ID < 10 || ID > 99);
 }*/
 
-
 NoArv* remove_no(NoArv *raiz, int num_id)
 {
     NoArv *aux, *maior_esq;
@@ -213,14 +212,28 @@ NoArv* remove_no(NoArv *raiz, int num_id)
     }
 }
 
-    void remover(Arv *A)
+Arv* remover( Arv *RAIZ, int num_id)
+{
+    NoArv *aux = RAIZ->raiz;
+if(aux->info.cod== num_id && aux->dir==NULL && aux->esq==NULL)
+    {
+        free(aux);
+        free(RAIZ);
+        return NULL;
+    }
+    RAIZ->raiz = remove_no(RAIZ->raiz,num_id);
+    return RAIZ;
+}
+
+
+    void ler_remover(Arv *A)
     {
         int id_remover;
         printf("Digite o número de identificação do incidente que deseja remover: ");
                 scanf("%d", &id_remover);
                 if (BuscaID_incidente(A->raiz, id_remover))
                 {
-                    A->raiz = remove_no(A->raiz, id_remover);
+                    A->raiz = remover(A->raiz, id_remover);
                     printf("\nIncidente removido com sucesso!\n");
                 }
                 else

@@ -12,8 +12,8 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     setlocale(LC_ALL,"portuguese.UTF-8");
     Arv *A = CriaArvore();
-    Equipamento *tabela[TAM_hash];
-
+    lista *tabela[TAM_hash];
+    inicializa_hash(tabela);
     int escolha = 1;
 
     while(escolha != 0)
@@ -50,7 +50,7 @@ int main()
             }
             else
             {
-                remover(A);     
+                ler_remover(A);     
             }
             system("pause");
             break;
