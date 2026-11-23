@@ -45,7 +45,7 @@ void inicializa_hash(lista *tabela[]) {
 }
 
 
-int buscatabela_hash(lista *tabela[], int k)
+int *buscatabela_hash(lista *tabela[], int k)
 {
   int i = hash(k);
   no *atual = tabela[i] -> inicio;
@@ -63,6 +63,56 @@ int buscatabela_hash(lista *tabela[], int k)
     }
 
     return 0;
+}
+
+no *busca_no(lista *tabela[], int k)
+{
+  int i = hash(k);
+  no *atual = tabela[i] -> inicio;
+
+   if (atual != NULL)
+    {
+      while (atual != NULL)
+      {
+        if(atual->info.Cod_identificacao == k)
+        {
+          return atual;
+        }
+        atual = atual -> prox;
+      }
+    }
+
+    return NULL;
+}
+
+
+void pesquisa(lista *tabela[])
+{
+    no *aux;
+    
+    do{
+        printf("Digite o código único de identificação(número inteiro de 4 digítos): ");
+        scanf("%d",&aux-> info.Cod_identificacao);
+
+    }while (aux -> info.Cod_identificacao < 1000 || aux -> info.Cod_identificacao > 9999);
+   
+
+    aux = busca_no;
+
+    if(aux == NULL)
+    {
+        printf("Código não foi encontrado");
+    }
+    else
+    {
+        printf("\n\tCódigo de identificação: %d", aux -> info.Cod_identificacao);
+        printf("\n\tNome do Equipamento: %s",aux -> info.Nome);
+        while (aux->info.incid != NULL)
+        {
+            //tem que terminar aqui linkando os incidentes, não sei como faz isso ainda... 
+        }
+        
+    }
 }
 
 
@@ -93,7 +143,7 @@ void ler_hash(lista *tabela[]){
    int flag;
     do{
         flag = 0;
-        printf("Digite o código único de identificação(número inteiro de 2 digítos): ");
+        printf("Digite o código único de identificação(número inteiro de 4 digítos): ");
         scanf("%d",&ajuda.Cod_identificacao);
         
         if(buscatabela_hash(tabela,ajuda.Cod_identificacao)){
