@@ -132,6 +132,7 @@ void RegistroDoIncidente(Arv *antiga, lista *tabela[]) {
 }
 
 
+
 void Excluir_equip(lista *tabela[], Arv *antiga)
 {
   int flag;
@@ -158,7 +159,7 @@ void Excluir_equip(lista *tabela[], Arv *antiga)
     while (apag != NULL)
     {
       aux = apag ->prox;
-      remover(antiga->raiz, apag->id_incidente);
+      remover(antiga, apag->id_incidente);
       free(apag);
       apag = aux;
     }
@@ -169,7 +170,7 @@ void Excluir_equip(lista *tabela[], Arv *antiga)
 }
 
 
-
+//terminar essa merda
 void pesquisa(lista *tabela[]) {
   no *aux;
 
@@ -187,6 +188,7 @@ void pesquisa(lista *tabela[]) {
   } else {
     printf("\n\tCódigo de identificação: %d", aux->info.Cod_identificacao);
     printf("\n\tNome do Equipamento: %s", aux->info.Nome);
+    //colocar para printar todas as infos de incidente
     while (aux->info.incid != NULL) {
         
     }
