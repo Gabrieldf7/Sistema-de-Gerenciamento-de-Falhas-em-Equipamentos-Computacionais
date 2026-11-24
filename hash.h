@@ -48,7 +48,7 @@ void inicializa_hash(lista *tabela[]) {
   }
 }
 
-int *buscatabela_hash(lista *tabela[], int k) {
+int buscatabela_hash(lista *tabela[], int k) {
   int i = hash(k);
   no *atual = tabela[i]->inicio;
 
@@ -64,22 +64,39 @@ int *buscatabela_hash(lista *tabela[], int k) {
   return 0;
 }
 
-lista_incid * inserir_incid(lista_incid *inicio, int id) {
+lista_incid *inserir_incid(lista_incid *inicio, int id) {
 
   lista_incid *novo = (lista_incid *)malloc(sizeof(lista_incid));
   novo->id_incidente = id;
   novo->prox = inicio;
   return novo;
+
 }
 
-void RegistroDoIncidente(Arv *antiga, lista *tabela) {
-    int flag;
-    incidente aux;
-    no *equipamento = NULL;
+no *busca_no(lista *tabela[], int k) {
+  int i = hash(k);
+  no *atual = tabela[i]->inicio;
+
+  if (atual != NULL) {
+    while (atual != NULL) {
+      if (atual->info.Cod_identificacao == k) {
+        return atual;
+      }
+      atual = atual->prox;
+    }
+  }
+
+  return NULL;
+}
+
+
+void RegistroDoIncidente(Arv *antiga, lista *tabela[]) {
+  int flag;
+  incidente aux;
+  no *equipamento = NULL;
 
   do {
-    printf("Digite o código único de identificação(número inteiro de 4 "
-           "digítos): ");
+    printf("Digite o código único de identificação do equipamento(número inteiro de 4 digítos): ");
     scanf("%d", &aux.cod);
   } while (aux.cod < 1000 ||aux.cod > 9999);
 
@@ -93,7 +110,7 @@ void RegistroDoIncidente(Arv *antiga, lista *tabela) {
   { 
     do {
       flag = 0;
-      printf("Digite o número único de identificação (2 dígitos): ");
+      printf("Digite o número único de identificação do incidente (2 dígitos): ");
       scanf("%d", &aux.num_identificacao);
       if (BuscaID_incidente(antiga->raiz, aux.num_identificacao)) {
         printf("Esse número já foi cadastrado!\n");
@@ -115,28 +132,49 @@ void RegistroDoIncidente(Arv *antiga, lista *tabela) {
 }
 
 
-no *busca_no(lista *tabela[], int k) {
-  int i = hash(k);
-  no *atual = tabela[i]->inicio;
+void Excluir_equip(lista *tabela[], Arv *antiga)
+{
+  int flag;
+  
+  int cod;
+  no *equipamento = NULL;
 
-  if (atual != NULL) {
-    while (atual != NULL) {
-      if (atual->info.Cod_identificacao == k) {
-        return atual;
-      }
-      atual = atual->prox;
+  do {
+    printf("Digite o código único de identificação do equipamento (número inteiro de 4 digítos): ");
+    scanf("%d", &cod);
+  } while (cod < 1000 || cod > 9999);
+
+  equipamento = busca_no(tabela,cod);
+
+  
+  if(equipamento == NULL)
+  {
+    printf("Equipamento procurado não existe!");
+  }
+  else
+  {
+    lista_incid *apag = equipamento->info.incid;
+    lista_incid *aux = NULL;
+    while (apag != NULL)
+    {
+      aux = apag ->prox;
+      remover(antiga->raiz, apag->id_incidente);
+      free(apag);
+      apag = aux;
     }
   }
 
-  return NULL;
+  free(equipamento);
+
 }
+
+
 
 void pesquisa(lista *tabela[]) {
   no *aux;
 
   do {
-    printf("Digite o código único de identificação(número inteiro de 4 "
-           "digítos): ");
+    printf("Digite o código único de identificação(número inteiro de 4 digítos): ");
     scanf("%d", &aux->info.Cod_identificacao);
 
   } while (aux->info.Cod_identificacao < 1000 ||

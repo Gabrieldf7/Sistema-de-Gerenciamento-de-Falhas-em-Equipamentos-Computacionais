@@ -37,7 +37,7 @@ int main()
 
         case 1:
             system("cls");
-            InsereArv(A);
+            RegistroDoIncidente(A,tabela);
             printf("\nIncidente cadastrado com sucesso!\n");
             system("pause");
             break;

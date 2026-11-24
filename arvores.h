@@ -112,23 +112,6 @@ void PrintaElem(NoArv *A) {
   }
 }
 
-// TEM Q TERMINAR DPS COM O EQUIPAMENTO
-/*void PesquisarID(NoArv *A){
-    int ID, flag;
-    do{
-        printf("Digite o número único de identificação(número inteiro de 2
-digítos): "); scanf("%d",&ID);
-
-        if(BuscaID_incidente(A,ID)){
-            printf("Número de identificação: %d \n\t", A ->
-info.num_identificacao); printf("Código: %d \n\t",A -> info.cod); printf("Nível
-de Gravidade: %d, \n\t", A -> info.nivel_gravidade );
-        }
-        else{
-            printf("Número único de identificação inválido");
-        }
-    }while (ID < 10 || ID > 99);
-}*/
 
 NoArv *remove_no(NoArv *raiz, int num_id) {
   NoArv *aux, *maior_esq;
