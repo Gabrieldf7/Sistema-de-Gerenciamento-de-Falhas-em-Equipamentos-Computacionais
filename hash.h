@@ -1,28 +1,33 @@
 #define TAM_hash 67
 
-typedef struct lista lista;
+typedef struct lista_incid lista_incid;
 
 typedef struct equipamento {
   int Cod_identificacao;
   char Nome[11];
-  struct lista *incid;
+  struct lista_incid *incid;
 } Equipamento;
 
-typedef struct no{
-    Equipamento info;
-    struct no* prox;
-}no;
+typedef struct no {
+  Equipamento info;
+  struct no *prox;
+} no;
 
-typedef struct lista{
-    no*inicio;
-}lista;
+typedef struct lista_incid {
+  int id_incidente;
+  struct lista_incid *prox;
+} lista_incid;
 
-lista* Criarlista(){
-    lista*aux;
-    aux=(lista*)malloc(sizeof(lista));
-    aux->inicio = NULL;
-    return aux;   
-}   
+typedef struct lista {
+  no *inicio;
+} lista;
+
+lista *Criarlista() {
+  lista *aux;
+  aux = (lista *)malloc(sizeof(lista));
+  aux->inicio = NULL;
+  return aux;
+}
 
 int hash(int k) {
   float A = 0.6180339887;
@@ -33,137 +38,171 @@ int hash(int k) {
 }
 
 void inicializa_hash(lista *tabela[]) {
-    
-    for (int i = 0; i < TAM_hash; i++) {
-        tabela[i] = Criarlista();
+
+  for (int i = 0; i < TAM_hash; i++) {
+    tabela[i] = Criarlista();
   }
 
-    for (int i = 0; i < TAM_hash; i++) {
-        tabela[i]->inicio = NULL;
+  for (int i = 0; i < TAM_hash; i++) {
+    tabela[i]->inicio = NULL;
+  }
+}
+
+int *buscatabela_hash(lista *tabela[], int k) {
+  int i = hash(k);
+  no *atual = tabela[i]->inicio;
+
+  if (atual != NULL) {
+    while (atual != NULL) {
+      if (atual->info.Cod_identificacao == k) {
+        return 1;
+      }
+      atual = atual->prox;
+    }
   }
 
+  return 0;
 }
 
+lista_incid * inserir_incid(lista_incid *inicio, int id) {
 
-int *buscatabela_hash(lista *tabela[], int k)
-{
-  int i = hash(k);
-  no *atual = tabela[i] -> inicio;
-
-   if (atual != NULL)
-    {
-      while (atual != NULL)
-      {
-        if(atual->info.Cod_identificacao == k)
-        {
-          return 1;
-        }
-        atual = atual -> prox;
-      }
-    }
-
-    return 0;
+  lista_incid *novo = (lista_incid *)malloc(sizeof(lista_incid));
+  novo->id_incidente = id;
+  novo->prox = inicio;
+  return novo;
 }
 
-no *busca_no(lista *tabela[], int k)
-{
-  int i = hash(k);
-  no *atual = tabela[i] -> inicio;
+void RegistroDoIncidente(Arv *antiga, lista *tabela) {
+    int flag;
+    incidente aux;
+    no *equipamento = NULL;
 
-   if (atual != NULL)
-    {
-      while (atual != NULL)
-      {
-        if(atual->info.Cod_identificacao == k)
-        {
-          return atual;
-        }
-        atual = atual -> prox;
-      }
-    }
+  do {
+    printf("Digite o código único de identificação(número inteiro de 4 "
+           "digítos): ");
+    scanf("%d", &aux.cod);
+  } while (aux.cod < 1000 ||aux.cod > 9999);
 
-    return NULL;
-}
+  equipamento = busca_no(tabela,aux.cod);
 
-
-void pesquisa(lista *tabela[])
-{
-    no *aux;
-    
-    do{
-        printf("Digite o código único de identificação(número inteiro de 4 digítos): ");
-        scanf("%d",&aux-> info.Cod_identificacao);
-
-    }while (aux -> info.Cod_identificacao < 1000 || aux -> info.Cod_identificacao > 9999);
-   
-
-    aux = busca_no;
-
-    if(aux == NULL)
-    {
-        printf("Código não foi encontrado");
-    }
-    else
-    {
-        printf("\n\tCódigo de identificação: %d", aux -> info.Cod_identificacao);
-        printf("\n\tNome do Equipamento: %s",aux -> info.Nome);
-        while (aux->info.incid != NULL)
-        {
-            //tem que terminar aqui linkando os incidentes, não sei como faz isso ainda... 
-        }
-        
-    }
-}
-
-
-no* Inserirhash(no *antigo, Equipamento ajuda){
-
-    no *novo = (no*)malloc(sizeof(no));
-    novo->info = ajuda; 
-    novo->prox = NULL;  
-
-    
-    if (antigo == NULL) {
-        return novo;
-    }
-    
-    no *aux = antigo;
-    while (aux->prox != NULL) {
-        aux = aux->prox;
-    }
-
-    aux->prox = novo;
-    
-    return antigo; 
-}
-
-
-void ler_hash(lista *tabela[]){
-   Equipamento ajuda;
-   int flag;
-    do{
-        flag = 0;
-        printf("Digite o código único de identificação(número inteiro de 4 digítos): ");
-        scanf("%d",&ajuda.Cod_identificacao);
-        
-        if(buscatabela_hash(tabela,ajuda.Cod_identificacao)){
-            printf("Esse código já foi cadastrado!!");
-            flag = 1; 
-        }
-
-    }while (ajuda.Cod_identificacao < 1000 || ajuda.Cod_identificacao > 9999 || flag == 1);
-
-
+  if (equipamento == NULL)
+  {
+    printf("O equipamento requerido não existe!");
+  }
+  else
+  { 
     do {
-        printf("\nDigite o nome do equipamento de até 11 caractéres: ");
-        fgets(ajuda.Nome, sizeof(ajuda.Nome), stdin);
-                
-        if (strlen(ajuda.Nome) == 0) {
-          printf("Erro: O nome do equipamento não pode ser vazio!\n");
-        }
-    } while (strlen(ajuda.Nome) == 0);
+      flag = 0;
+      printf("Digite o número único de identificação (2 dígitos): ");
+      scanf("%d", &aux.num_identificacao);
+      if (BuscaID_incidente(antiga->raiz, aux.num_identificacao)) {
+        printf("Esse número já foi cadastrado!\n");
+        flag = 1;
+      }
+    } while (aux.num_identificacao < 10 || aux.num_identificacao > 99 || flag == 1);
+    
+    do {
+      printf("Digite o nível de gravidade (1-Baixa, 2-Média, 3-Alta): ");
+      scanf("%d", &aux.nivel_gravidade);
+    } while (aux.nivel_gravidade < 1 || aux.nivel_gravidade > 3);
 
-    int indice;
-    indice = hash(ajuda.Cod_identificacao);
-    tabela[indice]->inicio = Inserirhash(tabela[indice]->inicio,ajuda);
+
+    antiga->raiz = aux_insere(antiga->raiz,aux);
+    equipamento->info.incid = inserir_incid(equipamento->info.incid, aux.num_identificacao);
+    printf("\nIncidente cadastrado com sucesso!\n");
+
+  }
+}
+
+
+no *busca_no(lista *tabela[], int k) {
+  int i = hash(k);
+  no *atual = tabela[i]->inicio;
+
+  if (atual != NULL) {
+    while (atual != NULL) {
+      if (atual->info.Cod_identificacao == k) {
+        return atual;
+      }
+      atual = atual->prox;
+    }
+  }
+
+  return NULL;
+}
+
+void pesquisa(lista *tabela[]) {
+  no *aux;
+
+  do {
+    printf("Digite o código único de identificação(número inteiro de 4 "
+           "digítos): ");
+    scanf("%d", &aux->info.Cod_identificacao);
+
+  } while (aux->info.Cod_identificacao < 1000 ||
+           aux->info.Cod_identificacao > 9999);
+
+  aux = busca_no(tabela, aux->info.Cod_identificacao);
+
+  if (aux == NULL) {
+    printf("Código não foi encontrado");
+  } else {
+    printf("\n\tCódigo de identificação: %d", aux->info.Cod_identificacao);
+    printf("\n\tNome do Equipamento: %s", aux->info.Nome);
+    while (aux->info.incid != NULL) {
+        
+    }
+  }
+}
+
+no *Inserirhash(no *antigo, Equipamento ajuda) {
+
+  no *novo = (no *)malloc(sizeof(no));
+  novo->info = ajuda;
+  novo->info.incid = NULL;
+  novo->prox = NULL;
+
+  if (antigo == NULL) {
+    return novo;
+  }
+
+  no *aux = antigo;
+  while (aux->prox != NULL) {
+    aux = aux->prox;
+  }
+
+  aux->prox = novo;
+
+  return antigo;
+}
+
+void ler_hash(lista *tabela[]) {
+  Equipamento ajuda;
+  int flag;
+  do {
+    flag = 0;
+    printf("Digite o código único de identificação(número inteiro de 4 "
+           "digítos): ");
+    scanf("%d", &ajuda.Cod_identificacao);
+
+    if (buscatabela_hash(tabela, ajuda.Cod_identificacao)) {
+      printf("Esse código já foi cadastrado!!");
+      flag = 1;
+    }
+
+  } while (ajuda.Cod_identificacao < 1000 || ajuda.Cod_identificacao > 9999 ||
+           flag == 1);
+
+  do {
+    printf("\nDigite o nome do equipamento de até 11 caractéres: ");
+    fgets(ajuda.Nome, sizeof(ajuda.Nome), stdin);
+
+    if (strlen(ajuda.Nome) == 0) {
+      printf("Erro: O nome do equipamento não pode ser vazio!\n");
+    }
+  } while (strlen(ajuda.Nome) == 0);
+
+  int indice;
+  indice = hash(ajuda.Cod_identificacao);
+  tabela[indice]->inicio = Inserirhash(tabela[indice]->inicio, ajuda);
 }
