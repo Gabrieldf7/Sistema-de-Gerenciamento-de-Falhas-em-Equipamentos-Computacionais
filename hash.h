@@ -112,7 +112,7 @@ void RegistroDoIncidente(Arv *antiga, lista *tabela[]) {
       flag = 0;
       printf("Digite o número único de identificação do incidente (2 dígitos): ");
       scanf("%d", &aux.num_identificacao);
-      if (BuscaID_incidente(antiga->raiz, aux.num_identificacao)) {
+      if (BuscaNo_incidente(antiga->raiz, aux.num_identificacao) != NULL) {
         printf("Esse número já foi cadastrado!\n");
         flag = 1;
       }
@@ -135,8 +135,6 @@ void RegistroDoIncidente(Arv *antiga, lista *tabela[]) {
 
 void Excluir_equip(lista *tabela[], Arv *antiga)
 {
-  int flag;
-  
   int cod;
   no *equipamento = NULL;
 
@@ -169,31 +167,52 @@ void Excluir_equip(lista *tabela[], Arv *antiga)
 
 }
 
-
-//terminar essa merda
-void pesquisa(lista *tabela[]) {
+void pesquisa(lista *tabela[], Arv *arvore) {
+  int cod;
   no *aux;
 
   do {
-    printf("Digite o código único de identificação(número inteiro de 4 digítos): ");
-    scanf("%d", &aux->info.Cod_identificacao);
+    printf("Digite o código único de identificação (número inteiro de 4 dígitos): ");
+    scanf("%d", &cod);
+  } while (cod < 1000 || cod > 9999);
 
-  } while (aux->info.Cod_identificacao < 1000 ||
-           aux->info.Cod_identificacao > 9999);
-
-  aux = busca_no(tabela, aux->info.Cod_identificacao);
+  aux = busca_no(tabela, cod);
 
   if (aux == NULL) {
-    printf("Código não foi encontrado");
-  } else {
-    printf("\n\tCódigo de identificação: %d", aux->info.Cod_identificacao);
-    printf("\n\tNome do Equipamento: %s", aux->info.Nome);
-    //colocar para printar todas as infos de incidente
-    while (aux->info.incid != NULL) {
-        
+    printf("\nCódigo não foi encontrado!\n"); 
+  }
+
+  else{
+    printf("\nCódigo de identificação: %d", aux->info.Cod_identificacao);
+    printf("\nNome do Equipamento: %s", aux->info.Nome);
+
+    lista_incid *atual = aux->info.incid;
+
+    if (atual == NULL) {
+      printf("\nNenhum incidente associado a este equipamento.\n");
+    } 
+    else {
+      printf("\nIncidentes Associados \n");
+      while (atual != NULL) {
+      NoArv *inc = BuscaNo_incidente(arvore->raiz, atual->id_incidente);
+  
+      printf("\nID do Incidente: %d", inc->info.num_identificacao);
+      printf("\nNível de Gravidade: %d ", inc->info.nivel_gravidade);
+      if (inc->info.nivel_gravidade == 1) {
+        printf("(Baixa)\n");
+      } 
+      else if (inc->info.nivel_gravidade == 2) {
+        printf("(Média)\n");
+      } 
+      else if (inc->info.nivel_gravidade == 3) {
+        printf("(Alta)\n");
+      }
+      atual = atual->prox;
+      }
     }
   }
 }
+
 
 no *Inserirhash(no *antigo, Equipamento ajuda) {
 
@@ -219,23 +238,25 @@ no *Inserirhash(no *antigo, Equipamento ajuda) {
 void ler_hash(lista *tabela[]) {
   Equipamento ajuda;
   int flag;
-  do {
+   do {
     flag = 0;
-    printf("Digite o código único de identificação(número inteiro de 4 "
-           "digítos): ");
+    printf("Digite o código único de identificação (número inteiro de 4 dígitos): ");
     scanf("%d", &ajuda.Cod_identificacao);
 
-    if (buscatabela_hash(tabela, ajuda.Cod_identificacao)) {
-      printf("Esse código já foi cadastrado!!");
+    if (ajuda.Cod_identificacao < 1000 || ajuda.Cod_identificacao > 9999) {
+      printf("Código inválido! Digite um número entre 1000 e 9999.\n");
+    } 
+    else if (buscatabela_hash(tabela, ajuda.Cod_identificacao)) {
+      printf("Esse código já foi cadastrado!!\n");
       flag = 1;
     }
 
-  } while (ajuda.Cod_identificacao < 1000 || ajuda.Cod_identificacao > 9999 ||
-           flag == 1);
-
-  do {
-    printf("\nDigite o nome do equipamento de até 11 caractéres: ");
+  } while (ajuda.Cod_identificacao < 1000 || ajuda.Cod_identificacao > 9999 || flag == 1);
+  limpar_buffer();
+   do {
+    printf("\nDigite o nome do equipamento de até 10 caracteres: ");
     fgets(ajuda.Nome, sizeof(ajuda.Nome), stdin);
+    ajuda.Nome[strcspn(ajuda.Nome, "\n")] = '\0'; 
 
     if (strlen(ajuda.Nome) == 0) {
       printf("Erro: O nome do equipamento não pode ser vazio!\n");
@@ -245,4 +266,40 @@ void ler_hash(lista *tabela[]) {
   int indice;
   indice = hash(ajuda.Cod_identificacao);
   tabela[indice]->inicio = Inserirhash(tabela[indice]->inicio, ajuda);
+}
+
+void ler_remover(Arv *A, lista *tabela[]) {
+  int id_remover;
+  printf("Digite o número de identificação do incidente que deseja remover: ");
+  scanf("%d", &id_remover);
+
+  NoArv *inc = BuscaNo_incidente(A->raiz, id_remover);
+
+  if (inc != NULL) {
+    int cod_equip = inc->info.cod;
+
+    no *equip = busca_no(tabela, cod_equip);
+    if (equip != NULL) {
+      lista_incid *atual = equip->info.incid;
+      lista_incid *ant = NULL;
+
+      while (atual != NULL && atual->id_incidente != id_remover) {
+        ant = atual;
+        atual = atual->prox;
+      }
+      if (ant == NULL) {
+        equip->info.incid = atual->prox;
+      } 
+      else {
+          ant->prox = atual->prox;
+        }
+      free(atual);
+    }
+
+    remover(A, id_remover);
+
+    printf("\nIncidente removido com sucesso!\n");
+  } else {
+    printf("\nIncidente com ID %d não encontrado!\n", id_remover);
+  }
 }

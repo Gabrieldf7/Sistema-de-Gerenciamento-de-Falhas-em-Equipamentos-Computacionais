@@ -28,24 +28,10 @@ int VerificaArvore(NoArv *raiz) {
   return 0;
 }
 
-int BuscaID_incidente(NoArv *no, int num) {
-  NoArv *Pai;
-  if (no == NULL) {
-    return 0;
-  } else {
-    Pai = no;
-    while (Pai != NULL) {
-      if (Pai->info.num_identificacao < num) {
-        Pai = Pai->dir;
-      } else if (Pai->info.num_identificacao > num) {
-        Pai = Pai->esq;
-      } else if (Pai->info.num_identificacao == num) {
-        return 1;
-      }
-    }
-    return 0;
-  }
-}
+void limpar_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+} 
 
 NoArv *BuscaNo_incidente(NoArv *no, int num) {
   NoArv *Pai = no;
@@ -162,16 +148,4 @@ Arv *remover(Arv *RAIZ, int num_id) {
   }
   RAIZ->raiz = remove_no(RAIZ->raiz, num_id);
   return RAIZ;
-}
-
-void ler_remover(Arv *A) {
-  int id_remover;
-  printf("Digite o número de identificação do incidente que deseja remover: ");
-  scanf("%d", &id_remover);
-  if (BuscaID_incidente(A->raiz, id_remover)) {
-    A = remover(A, id_remover);
-    printf("\nIncidente removido com sucesso!\n");
-  } else {
-    printf("\nIncidente com ID %d não encontrado!\n", id_remover);
-  }
 }

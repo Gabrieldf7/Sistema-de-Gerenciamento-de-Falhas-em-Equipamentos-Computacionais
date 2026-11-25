@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
-#include <math.h>
 #include <windows.h>
 #include "arvores.h"
 #include "hash.h"
@@ -49,7 +48,7 @@ int main()
 
         case 3:
             system("cls");
-            pesquisa(tabela);
+            pesquisa(tabela, A);
             printf("\n");
             system("pause");
             break;
@@ -76,7 +75,7 @@ int main()
             }
             else
             {
-                ler_remover(A);
+                ler_remover(A, tabela);
             }
             system("pause");
             break;
