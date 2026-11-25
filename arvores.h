@@ -139,13 +139,14 @@ NoArv *remove_no(NoArv *raiz, int num_id) {
   }
 }
 
-Arv *remover(Arv *RAIZ, int num_id) {
-  NoArv *aux = RAIZ->raiz;
-  if (aux->info.cod == num_id && aux->dir == NULL && aux->esq == NULL) {
-    free(aux);
-    free(RAIZ);
-    return NULL;
+void remover(Arv *RAIZ, int num_id) 
+{
+  if(RAIZ == NULL || RAIZ -> raiz == NULL)
+  {
+    printf("A Raiz está vazia!");
   }
-  RAIZ->raiz = remove_no(RAIZ->raiz, num_id);
-  return RAIZ;
+  else
+  {
+    RAIZ->raiz = remove_no(RAIZ->raiz,num_id);
+  }
 }

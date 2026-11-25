@@ -43,9 +43,6 @@ void inicializa_hash(lista *tabela[]) {
     tabela[i] = Criarlista();
   }
 
-  for (int i = 0; i < TAM_hash; i++) {
-    tabela[i]->inicio = NULL;
-  }
 }
 
 int buscatabela_hash(lista *tabela[], int k) {
@@ -86,6 +83,22 @@ no *busca_no(lista *tabela[], int k) {
     }
   }
 
+  return NULL;
+}
+
+no* busca_no_antes(lista *tabela[], int k)
+{
+  int i = hash(k);
+  no *atual = tabela[i]->inicio;
+
+  if (atual != NULL) {
+    while (atual -> prox!= NULL) {
+      if (atual -> prox -> info.Cod_identificacao == k) {
+        return atual;
+      }
+      atual = atual->prox;
+    }
+  }
   return NULL;
 }
 
@@ -137,6 +150,7 @@ void Excluir_equip(lista *tabela[], Arv *antiga)
 {
   int cod;
   no *equipamento = NULL;
+  no *anterior;
 
   do {
     printf("Digite o código único de identificação do equipamento (número inteiro de 4 digítos): ");
@@ -144,7 +158,7 @@ void Excluir_equip(lista *tabela[], Arv *antiga)
   } while (cod < 1000 || cod > 9999);
 
   equipamento = busca_no(tabela,cod);
-
+  anterior = busca_no_antes(tabela,cod);
   
   if(equipamento == NULL)
   {
@@ -152,6 +166,16 @@ void Excluir_equip(lista *tabela[], Arv *antiga)
   }
   else
   {
+    if (anterior == NULL)
+    {
+      tabela[hash(cod)] -> inicio = equipamento -> prox;
+    }
+    else
+    {
+      anterior -> prox = equipamento -> prox;
+    }
+  
+
     lista_incid *apag = equipamento->info.incid;
     lista_incid *aux = NULL;
     while (apag != NULL)
@@ -160,10 +184,11 @@ void Excluir_equip(lista *tabela[], Arv *antiga)
       remover(antiga, apag->id_incidente);
       free(apag);
       apag = aux;
-    }
-  }
+    }  
+    free(equipamento);
+    printf("Equipamento excluído com sucesso!");
+}
 
-  free(equipamento);
 
 }
 
@@ -195,7 +220,9 @@ void pesquisa(lista *tabela[], Arv *arvore) {
       printf("\nIncidentes Associados \n");
       while (atual != NULL) {
       NoArv *inc = BuscaNo_incidente(arvore->raiz, atual->id_incidente);
-  
+      
+      if(inc != NULL)
+      {
       printf("\nID do Incidente: %d", inc->info.num_identificacao);
       printf("\nNível de Gravidade: %d ", inc->info.nivel_gravidade);
       if (inc->info.nivel_gravidade == 1) {
@@ -207,8 +234,11 @@ void pesquisa(lista *tabela[], Arv *arvore) {
       else if (inc->info.nivel_gravidade == 3) {
         printf("(Alta)\n");
       }
+      
+      }
       atual = atual->prox;
       }
+      
     }
   }
 }
@@ -287,13 +317,14 @@ void ler_remover(Arv *A, lista *tabela[]) {
         ant = atual;
         atual = atual->prox;
       }
-      if (ant == NULL) {
-        equip->info.incid = atual->prox;
-      } 
-      else {
+      if (atual != NULL) {
+        if (ant == NULL) {
+          equip->info.incid = atual->prox;
+        } else {
           ant->prox = atual->prox;
         }
-      free(atual);
+        free(atual);
+      }
     }
 
     remover(A, id_remover);
