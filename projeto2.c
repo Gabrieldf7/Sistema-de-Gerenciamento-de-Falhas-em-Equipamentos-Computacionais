@@ -89,9 +89,32 @@ int main()
 
         case 7:
             system("cls");
-            printf("\nEncerrando...\n");
+            for (int i = 0; i < TAM_hash; i++)
+            {
+                no *atual = tabela[i]->inicio;
+                no *prox_equip = NULL;
+                while (atual != NULL)
+                {
+                    prox_equip = atual->prox;
+
+                    lista_incid *apag = atual->info.incid;
+                    lista_incid *aux = NULL;
+                    while (apag != NULL)
+                    {
+                        aux = apag->prox;
+                        remover(A, apag->id_incidente);
+                        free(apag);
+                        apag = aux;
+                    }
+
+                    free(atual);
+                    atual = prox_equip;
+                }
+                    
+            }
+            free(A);
             break;
-            
+
         default:
             printf("\n\tOpção inválida! Tente novamente.\n");
             system("pause");

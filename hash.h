@@ -330,7 +330,8 @@ void ler_remover(Arv *A, lista *tabela[]) {
     remover(A, id_remover);
 
     printf("\nIncidente removido com sucesso!\n");
-  } else {
+  } 
+  else {
     printf("\nIncidente com ID %d não encontrado!\n", id_remover);
   }
 }
