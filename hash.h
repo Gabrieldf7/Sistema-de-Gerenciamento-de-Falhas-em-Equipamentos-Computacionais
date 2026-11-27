@@ -111,6 +111,9 @@ void RegistroDoIncidente(Arv *antiga, lista *tabela[]) {
   do {
     printf("Digite o código único de identificação do equipamento(número inteiro de 4 digítos): ");
     scanf("%d", &aux.cod);
+    if (aux.cod < 1000 || aux.cod > 9999) {
+      printf("Código inválido! Digite um número entre 1000 e 9999.\n");
+    }
   } while (aux.cod < 1000 ||aux.cod > 9999);
 
   equipamento = busca_no(tabela,aux.cod);
@@ -125,7 +128,9 @@ void RegistroDoIncidente(Arv *antiga, lista *tabela[]) {
       flag = 0;
       printf("Digite o número único de identificação do incidente (2 dígitos): ");
       scanf("%d", &aux.num_identificacao);
-      if (BuscaNo_incidente(antiga->raiz, aux.num_identificacao) != NULL) {
+      if (aux.num_identificacao < 10 || aux.num_identificacao > 99) {
+        printf("Número inválido! Digite um número entre 10 e 99.\n");
+      } else if (BuscaNo_incidente(antiga->raiz, aux.num_identificacao) != NULL) {
         printf("Esse número já foi cadastrado!\n");
         flag = 1;
       }
@@ -134,6 +139,9 @@ void RegistroDoIncidente(Arv *antiga, lista *tabela[]) {
     do {
       printf("Digite o nível de gravidade (1-Baixa, 2-Média, 3-Alta): ");
       scanf("%d", &aux.nivel_gravidade);
+      if (aux.nivel_gravidade < 1 || aux.nivel_gravidade > 3) {
+        printf("Nível inválido! Digite 1, 2 ou 3.\n");
+      }
     } while (aux.nivel_gravidade < 1 || aux.nivel_gravidade > 3);
 
 
@@ -155,6 +163,9 @@ void Excluir_equip(lista *tabela[], Arv *antiga)
   do {
     printf("Digite o código único de identificação do equipamento (número inteiro de 4 digítos): ");
     scanf("%d", &cod);
+    if (cod < 1000 || cod > 9999) {
+      printf("Código inválido! Digite um número entre 1000 e 9999.\n");
+    }
   } while (cod < 1000 || cod > 9999);
 
   equipamento = busca_no(tabela,cod);
@@ -199,6 +210,9 @@ void pesquisa(lista *tabela[], Arv *arvore) {
   do {
     printf("Digite o código único de identificação (número inteiro de 4 dígitos): ");
     scanf("%d", &cod);
+    if (cod < 1000 || cod > 9999) {
+      printf("Código inválido! Digite um número entre 1000 e 9999.\n");
+    }
   } while (cod < 1000 || cod > 9999);
 
   aux = busca_no(tabela, cod);
